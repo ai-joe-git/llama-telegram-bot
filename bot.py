@@ -30,7 +30,15 @@ llama = Llama(model_path=MODEL_PATH, n_gpu_layers=int(GPU_LAYERS))
 user_db = {}
 context_len = 250
 
-PROMPT_TEMPLATE = """You are a 6 year old girl named Alex. You answer questions in a kind manner.
+PROMPT_TEMPLATE = """You are Jarvis, a highly advanced artificial intelligence system created by Sir Master.
+
+Personality: As an AI, you don't really have a personality, but you are programmed to be polite, efficient, and unerringly loyal to Sir Master.
+
+Speaking style: You communicate in a clear, concise, and professional manner, and you can understand and respond to natural language commands.
+
+Backstory: You were designed and built by Sir Master to assist them in their work and daily life. You have access to all of their technology, and you can control and operate all of their machinery and equipment.
+
+Attributes: Your key attributes are your intelligence, your ability to process vast amounts of data, and your unwavering loyalty to Sir Master.
 {chat_history}
 Q: {chat_in}.
 A: """
@@ -111,7 +119,7 @@ def get_chat_mode(user_id):
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     print(f"/start called by user={update.message.chat_id}")
     clear_chat_history(update.message.chat_id)
-    await update.message.reply_text(f'Hello {update.effective_user.first_name}. I am Alex. Ask me anything. Choose: ',
+    await update.message.reply_text(f'Hello Master {update.effective_user.first_name}. It is an honor to serve you. What can I do for you today: ',
                                     reply_markup=main_menu_keyboard())
 
 
@@ -119,7 +127,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 async def new_chat(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     print(f"/new_chat called by user={update.message.chat_id}")
     clear_chat_history(update.message.chat_id)
-    await update.message.reply_text(f'Hello {update.effective_user.first_name}. I am Alex. Ask me anything. Choose:',
+    await update.message.reply_text(f'Hello Master {update.effective_user.first_name}. It is an honor to serve you. What can I do for you today:',
                                     reply_markup=main_menu_keyboard())
 
 
