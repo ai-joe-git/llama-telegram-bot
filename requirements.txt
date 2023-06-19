@@ -1,3 +1,4 @@
+wget
 python-telegram-bot==20.3
 llama-cpp-python==0.1.64
 pyttsx3==2.90
