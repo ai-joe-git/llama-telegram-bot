@@ -207,6 +207,12 @@ async def generate_audio_response(prompt, context, update):
     return chat_out
 
 
+import tempfile
+import os
+from pathlib import Path
+from pydub import AudioSegment
+import speech_recognition as sr
+
 async def handle_voice(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     voice = update.message.voice
     with tempfile.TemporaryDirectory() as tmp_dir:
@@ -220,11 +226,23 @@ async def handle_voice(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
         # convert to mp3
         voice_mp3_path = tmp_dir / "voice.mp3"
         AudioSegment.from_file(voice_ogg_path).export(voice_mp3_path, format="mp3")
-        audio = AudioSegment.from_mp3(voice_mp3_path)
-        transcribed_text = f"I got your message of {audio.duration_seconds} secs. This feature is coming soon!"
-        # TODO: Transcribe and generate response.
 
-    await update.message.reply_text(transcribed_text, parse_mode=ParseMode.HTML)
+        # transcribe
+        r = sr.Recognizer()
+        with sr.AudioFile(voice_mp3_path) as source:
+            audio_text = r.record(source)
+
+        transcribed_text = ""
+        try:
+            transcribed_text = r.recognize_google(audio_text)
+        except sr.UnknownValueError:
+            transcribed_text = "Sorry, I could not understand what you said."
+        except sr.RequestError as e:
+            transcribed_text = f"Sorry, there was an error processing your request. Error: {e}"
+
+        # generate response
+        response_text = f"You said: {transcribed_text}"
+        await update.message.reply_text(response_text, parse_mode=ParseMode.HTML)
 
 # Handles telegram user chat message
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
