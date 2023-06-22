@@ -2,6 +2,8 @@ import os
 from enum import Enum
 import tempfile
 from pathlib import Path
+from pydub import AudioSegment
+import speech_recognition as sr
 
 
 from telegram.constants import ChatAction, ParseMode
@@ -205,13 +207,6 @@ async def generate_audio_response(prompt, context, update):
         pass
 
     return chat_out
-
-
-import tempfile
-import os
-from pathlib import Path
-from pydub import AudioSegment
-import speech_recognition as sr
 
 async def handle_voice(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     voice = update.message.voice
